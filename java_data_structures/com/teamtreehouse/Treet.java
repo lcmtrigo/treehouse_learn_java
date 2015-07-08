@@ -1,9 +1,12 @@
 package com.teamtreehouse;
 
 import java.io.Serializable;
+import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Date;
+import java.util.List;
 
-public class Treet implements Comparable, Serializable {
+public class Treet implements Comparable<Treet>, Serializable {
 	private static final long serialVersionUID = 7146681148113043748L;
 	private String mAuthor;
 	private String mDescription;
@@ -22,8 +25,7 @@ public class Treet implements Comparable, Serializable {
 	}
 
 	@Override
-	public int compareTo(Object obj) {
-		Treet other = (Treet) obj;
+	public int compareTo(Treet other) {
 		if (equals(other)) {
 			return 0;
 		}
@@ -46,7 +48,26 @@ public class Treet implements Comparable, Serializable {
 		return mCreationDate;
 	}
 
-	public String[] getWords() {
-		return mDescription.toLowerCase().split("[^\\w#@']+");
+	public List<String> getWords() {
+		String[] words = mDescription.toLowerCase().split("[^\\w#@']+");
+		return Arrays.asList(words);
+	}
+
+	public List<String> getHashTags() {
+		return getWordsPrefixedWith("#");
+	}
+
+	public List<String> getMentions() {
+		return getWordsPrefixedWith("@");
+	}
+
+	private List<String> getWordsPrefixedWith(String prefix) {
+		List<String> results = new ArrayList<String>();
+		for (String word : getWords()) {
+			if (word.startsWith(prefix)) {
+				results.add(word);
+			}
+		}
+		return results;
 	}
 }
